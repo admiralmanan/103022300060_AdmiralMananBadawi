@@ -11,9 +11,13 @@ on:
 
 jobs:
   build:
-
+  
     runs-on: ubuntu-latest
-
+    
+    permissions:
+      contents: write
+      packages: write
+      
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 21
@@ -21,11 +25,22 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
+        server-id: github
+        server-username: GITHUB_ACTOR
+        server-password: GITHUB_TOKEN
+        settings-path: ${{ github.workspace }}
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Build, test, and analyze
+    - name: Show generated settings.xml
+      run: cat $GITHUB_WORKSPACE/settings.xml
+
+    - name: Publish to GitHub Packages
+      run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=admiralmanan -Dsonar.projectKey=103022300060_AdmiralMananBadawi
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Build, test, and analyze
+    #   env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #   run: mvn verify sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=admiralmanan -Dsonar.projectKey=103022300060_AdmiralMananBadawi
