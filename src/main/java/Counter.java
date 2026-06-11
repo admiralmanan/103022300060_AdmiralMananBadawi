@@ -1,5 +1,5 @@
 package src.main.java;
-
+// Ini Benar Benar Benar
 public class Counter {
 
 	private int count;
@@ -9,7 +9,7 @@ public class Counter {
 	}
 		
 	public void reset() {
-		count = 10;
+		count = 0;
 	}
 	
 	public void increment() {
