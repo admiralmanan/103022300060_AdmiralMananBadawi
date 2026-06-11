@@ -1,7 +1,7 @@
 package src.main.java;
 // Ini Benar Benar Benar
 public class Counter {
-
+	int UnusedVar = 10;
 	private int count;
 	
 	public Counter() {
